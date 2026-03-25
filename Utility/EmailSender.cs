@@ -14,7 +14,7 @@ namespace Utility
 
             // Configuring subject and body of mail.
             emailToSend.Subject = subject;
-            emailToSend.From.Add(MailboxAddress.Parse("foodworldwebnn@gmail.com"));
+            emailToSend.From.Add(MailboxAddress.Parse("your email here"));
             emailToSend.Body = new TextPart(TextFormat.Html) { Text = htmlMessage };
 
             // Connecting to mail and sending that mail.
@@ -23,8 +23,7 @@ namespace Utility
             await emailClient.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
             // Authentication
-            //await emailClient.AuthenticateAsync("nenadjocicprm@gmail.com", "qyzspprkqtqgvywp");
-            await emailClient.AuthenticateAsync("foodworldwebnn@gmail.com", "ogwryryrumotnqrg");
+            await emailClient.AuthenticateAsync("your email here", "your token here");
 
 
             // Sending email
