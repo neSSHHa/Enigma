@@ -1,0 +1,1282 @@
+﻿@using Models.ViewModels
+@using Utility
+@model LectureFiltering
+@{
+    ViewData["Title"] = "Lectures";
+}
+<style>
+    :root {
+        --primary: #2563EB;
+        --primary-hover: #1D4ED8;
+        --surface: #FFFFFF;
+        --background: #F8FAFC;
+        --text-primary: #1E293B;
+        --text-secondary: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: var(--background);
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin: 3rem 0;
+        letter-spacing: -0.025em;
+    }
+
+    .layout-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    /* Filter Panel */
+    .filter-panel {
+        position: sticky;
+        top: 2rem;
+        background: var(--surface);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+    }
+
+    .filter-group {
+        margin-bottom: 2rem;
+    }
+
+        .filter-group h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin: 0 0 1rem;
+        }
+
+    .filter-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+    .filter-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+    .btn-secondary {
+        background: white;
+        color: var(--text-primary);
+        border-color: var(--border);
+    }
+
+        .btn-secondary:hover {
+            background: #F1F5F9;
+        }
+
+    /* Lecture Grid */
+    .lecture-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .lecture-card {
+        background: var(--surface);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .lecture-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .lecture-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+        }
+
+    .lecture-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .lecture-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .lecture-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 1rem;
+    }
+
+    .lecture-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .detail-value {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    /* Modern Toggle Buttons */
+    .toggle-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        background: white;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+    /* Custom Range Slider */
+    .range-slider {
+        width: 100%;
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        margin: 1rem 0;
+    }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+    /* Modern Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .modal-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    @@media (max-width: 768px) {
+        .layout-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-panel {
+            position: static;
+        }
+
+        .lecture-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .date-filter {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+
+    .date-picker-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .date-input-group {
+        margin-bottom: 0.5rem;
+    }
+
+    .date-label {
+        font-size: 0.8125rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .date-field {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .calendar-icon {
+        right: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .date-preview {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        margin-top: 0.75rem;
+    }
+
+    .date-preview-item {
+        gap: 0.5rem;
+        justify-content: space-between;
+    }
+
+    .date-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8125rem;
+    }
+
+    .date-value {
+        font-size: 0.875rem;
+    }
+
+    @@media (max-width: 768px) {
+        .date-picker-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+  
+
+    .modal-content {
+        position: relative;
+        padding: 2rem;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: color 0.2s;
+    }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+    .modal-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        margin: 0 0 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .modal-subheader {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .modal-date {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .modal-status {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+    }
+
+    .modal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .modal-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .field-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .field-value {
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .modal-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+    .btn-secondary {
+        background: var(--background);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+    }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background: #bb2d3b;
+        }
+
+    @@media (max-width: 768px) {
+        .modal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    /* Add these styles at the end of your existing CSS */
+
+    /* ========== ENHANCED EFFECTS ========== */
+    .lecture-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+
+        .lecture-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn {
+        transition: all 0.3s ease;
+        transform: translateZ(0);
+    }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: rgba(255, 255, 255, 0.15);
+            transition: height 0.3s ease;
+            z-index: 0;
+        }
+
+        .btn:hover::after {
+            height: 100%;
+        }
+
+    .modal-overlay {
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s ease;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+    .modal-card {
+        animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid var(--primary);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    @@keyframes slideUp {
+        from
+
+    {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    }
+
+    .toggle-btn {
+        transition: all 0.2s ease, transform 0.1s ease;
+    }
+
+        .toggle-btn.active {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-btn:active {
+            transform: scale(0.96);
+        }
+
+    .range-slider::-webkit-slider-thumb {
+        transition: transform 0.2s ease;
+    }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+    .date-preview-item {
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+        .date-preview-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary);
+        }
+
+    .lecture-status {
+        position: relative;
+        padding-left: 1.25rem;
+    }
+
+        .lecture-status::before {
+            content: "●";
+            position: absolute;
+            left: 0.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+    @@keyframes pulse {
+        0%
+
+    {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+
+    }
+
+    .filter-input {
+        transition: all 0.3s ease;
+    }
+
+        .filter-input:focus {
+            transform: scale(1.01);
+        }
+
+    /* Color-coded statuses */
+    .lecture-status[data-status="Upcoming"] {
+        color: #eab308;
+        background: rgba(234, 179, 8, 0.1);
+    }
+
+    .lecture-status[data-status="Completed"] {
+        color: #22c55e;
+        background: rgba(34, 197, 94, 0.1);
+    }
+
+    .lecture-status[data-status="In Progress"] {
+        color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    /* Hover effect for cards */
+    .lecture-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100% );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .lecture-card:hover::after {
+        opacity: 1;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem; /* Slightly larger padding for better proportions */
+        border-radius: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        text-decoration: none; /* Remove underline from links */
+        position: relative;
+        box-shadow: var(--shadow);
+    }
+
+    .btn-secondary {
+        background: var(--surface);
+        color: var(--text-primary);
+        border-color: var(--border);
+    }
+
+        .btn-secondary:hover {
+            background: #121212;
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+        }
+
+        .btn-secondary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 70%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .btn-secondary:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+    /* Add a subtle gradient background for a modern look */
+    .btn-secondary {
+        background: linear-gradient(145deg, var(--surface), #F1F5F9);
+    }
+
+        /* Add a focus state for accessibility */
+        .btn-secondary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+
+    /* Student List in Modal */
+    .student-list {
+        margin-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+    }
+
+    .student-list-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .student-list-container {
+        max-height: 300px;
+        overflow-y: auto;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border);
+    }
+
+    .student-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: var(--background);
+        border-bottom: 1px solid var(--border);
+    }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+    .student-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        margin-right: 1rem;
+    }
+
+    .student-info {
+        flex: 1;
+    }
+
+    .student-name {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .student-email {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .no-students {
+        padding: 1rem;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+</style>
+<div class="container">
+    <div class="layout-grid">
+        <aside class="filter-panel">
+
+        @if (User.IsInRole(StaticDetails.AdminRole))
+        {
+            <form method="post" asp-action="LecturesPOST">
+                <a asp-action="NewLecture" class="btn btn-secondary ">Create new lecture</a>
+                <a asp-action="YourLectures" class="btn btn-secondary">View lectures to attend</a>
+                <div class="filter-group">
+                        <div class="search-container filter-actions">
+                        <input asp-for="Search" class="filter-input" placeholder="Search lectures..." />
+                    <button id="generalSubmit" class="btn btn-primary" type="submit">Search</button>
+                </div>
+                </div>
+
+                    <div class="filter-group">
+                        <div class="toggle-group">
+                    <input asp-for="Type" id="LectureType" hidden />
+                    <button class="toggle-btn" type="button" id="OccupiedBtn" onclick="populateInput('@StaticDetails.Lecture_Type_Occupaed', this)">
+                        @StaticDetails.Lecture_Type_Occupaed
+                    </button>
+                            <button class="toggle-btn"  type="button" id="OpenBtn" onclick="populateInput('@StaticDetails.Lecture_Type_Open', this)">
+                        @StaticDetails.Lecture_Type_Open
+                    </button>
+                </div>
+                </div>
+                <hr />  
+                    <div class="filter-group">
+
+                        <div class="toggle-group">
+                    <input asp-for="Status" id="LectureStatus" hidden />
+                            <button class="toggle-btn" type="button" id="FinishedBtn" onclick="populateStatus('@StaticDetails.Lecture_Status_Finished', this)">
+                        @StaticDetails.Lecture_Status_Finished
+                    </button>
+                            <button class="toggle-btn" type="button" id="AwaitsBtn" onclick="populateStatus('@StaticDetails.Lecture_Status_Awaits', this)">
+                        @StaticDetails.Lecture_Status_Awaits
+                    </button>
+                            <button class="toggle-btn"  type="button" id="CanceledBtn" onclick="populateStatus('@StaticDetails.Lecture_status_Canceled', this)">
+                        @StaticDetails.Lecture_status_Canceled
+                    </button>
+                </div>
+                </div>
+
+                    <div class="filter-group">
+
+                <div class="Limits">
+                    <div class="limits-display">
+                        <span>Student limit: <span id="maxValue">@Model.MaxLimit</span></span>
+                    </div>
+                    <div class="range-slider">
+                                <input type="range" id="maxRange" class="range-slider" name="maxRange" min="1" max="30" value="@Model.MaxLimit" oninput="updateMaxLimit(this.value)" onmouseup="submitThis()">
+                    </div>
+
+                    <input asp-for="MaxLimit" id="MaxLimit" hidden />
+                </div>
+                </div>
+                             @*   <div class="date-filter">
+                    <div class="dates-range">
+                        <label for="startDate">Start Date:</label>
+                        <input type="datetime-local" id="startDate" asp-for="Start" value="@Model.Start?.ToString("yyyy-MM-ddTHH:mm")" onchange="updateStartDate(this.value)" />
+
+                        <label for="endDate">End Date:</label>
+                        <input type="datetime-local" id="endDate" asp-for="End" value="@Model.End?.ToString("yyyy-MM-ddTHH:mm")" onchange="updateEndDate(this.value)" />
+                    </div>
+                    <div class="date-display">
+                        <span>Start: <span id="startDateValue">@Model.Start?.ToString("yyyy-MM-ddTHH:mm")</span></span>
+                        <span>End: <span id="endDateValue">@Model.End?.ToString("yyyy-MM-ddTHH:mm")</span></span>
+                    </div>
+                </div> *@
+                    <div class="filter-group">
+                        <h3>Date Range</h3>
+                        <div class="date-filter">
+                            <div class="date-picker-grid">
+                                <div class="date-input-group">
+                                    <label class="date-label" for="startDate">Start</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="datetime-local"
+                                               id="startDate"
+                                               class="date-field"
+                                               asp-for="Start"
+                                               value="@Model.Start?.ToString("yyyy-MM-ddTHH:mm")"
+                                               onchange="updateStartDate(this.value)">
+                                        <span class="calendar-icon">⌗</span>
+                                    </div>
+                                </div>
+
+                                <div class="date-input-group">
+                                    <label class="date-label" for="endDate">End</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="datetime-local"
+                                               id="endDate"
+                                               class="date-field"
+                                               asp-for="End"
+                                               value="@Model.End?.ToString("yyyy-MM-ddTHH:mm")"
+                                               onchange="updateEndDate(this.value)">
+                                        <span class="calendar-icon">⌗</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="date-preview">
+                                <div class="date-preview-item">
+                                    <span class="date-value" id="startDateValue">
+                                        @Model.Start?.ToString("dd/MM/yy HH:mm")
+                                    </span>
+                                    <span class="date-badge">
+                                        📅
+                                    </span>
+                                </div>
+
+                                <div class="date-preview-item">
+                                    <span class="date-value" id="endDateValue">
+                                        @Model.End?.ToString("dd/MM/yy HH:mm")
+                                    </span>
+                                    <span class="date-badge">
+                                        📅
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-action="LecturesPOST">
+                <a asp-action="YourLectures" class="btn btn-secondary">View lectures to attend</a>
+                <input asp-for="Type" id="LectureType" hidden />
+                <input asp-for="Status" id="LectureStatus" hidden />
+
+                    <div class="filter-group">
+                        <div class="search-container filter-actions">
+                            <input asp-for="Search" class="filter-input" placeholder="Search lectures..." />
+                            <button id="generalSubmit" class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+
+                        <div class="Limits">
+                            <div class="limits-display">
+                                <span>Student limit: <span id="maxValue">@Model.MaxLimit</span></span>
+                            </div>
+                            <div class="range-slider">
+                                <input type="range" id="maxRange" class="range-slider" name="maxRange" min="1" max="30" value="@Model.MaxLimit" oninput="updateMaxLimit(this.value)" onmouseup="submitThis()">
+                            </div>
+
+                            <input asp-for="MaxLimit" id="MaxLimit" hidden />
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3>Date Range</h3>
+                        <div class="date-filter">
+                            <div class="date-picker-grid">
+                                <div class="date-input-group">
+                                    <label class="date-label" for="startDate">Start</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="datetime-local"
+                                               id="startDate"
+                                               class="date-field"
+                                               asp-for="Start"
+                                               value="@Model.Start?.ToString("yyyy-MM-ddTHH:mm")"
+                                               onchange="updateStartDate(this.value)">
+                                        <span class="calendar-icon">⌗</span>
+                                    </div>
+                                </div>
+
+                                <div class="date-input-group">
+                                    <label class="date-label" for="endDate">End</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="datetime-local"
+                                               id="endDate"
+                                               class="date-field"
+                                               asp-for="End"
+                                               value="@Model.End?.ToString("yyyy-MM-ddTHH:mm")"
+                                               onchange="updateEndDate(this.value)">
+                                        <span class="calendar-icon">⌗</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="date-preview">
+                                <div class="date-preview-item">
+                                    <span class="date-value" id="startDateValue">
+                                        @Model.Start?.ToString("dd/MM/yy HH:mm")
+                                    </span>
+                                    <span class="date-badge">
+                                        📅
+                                    </span>
+                                </div>
+
+                                <div class="date-preview-item">
+                                    <span class="date-value" id="endDateValue">
+                                        @Model.End?.ToString("dd/MM/yy HH:mm")
+                                    </span>
+                                    <span class="date-badge">
+                                        📅
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </form>
+        }
+
+    </aside>
+
+
+        <main class="lecture-grid">
+            @foreach (var lecture in Model.Lectures)
+            {
+                <article class="lecture-card" data-lecture-id="@lecture.Id">
+                    <div class="lecture-meta">
+                        <span class="lecture-date">@lecture.LectureStartTime.ToString("MMMM dd, yyyy")</span>
+                        @{
+                            var status = DateTime.Now < lecture.LectureStartTime ? "Upcoming" :
+                            DateTime.Now > lecture.LectureEndTIme ? "Completed" : "In Progress";
+                        }
+                        <span class="lecture-status">● @status</span>
+                    </div>
+                    <h2 class="lecture-title">@lecture.Name</h2>
+                    <div class="lecture-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Start:</span>
+                            <span class="detail-value">@lecture.LectureStartTime.ToString("hh:mm tt")</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">End:</span>
+                            <span class="detail-value">@lecture.LectureEndTIme.ToString("hh:mm tt")</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Students:</span>
+                            <span class="detail-value">@(lecture.Students?.Count ?? 0)/@lecture.StudentLimit</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Lecturer:</span>
+                            <span class="detail-value">@(lecture.Lecturer?.Name ?? "TBA")</span>
+                        </div>
+                    </div>
+                </article>
+            }
+        </main>
+
+        <div id="lectureModal" class="modal-overlay">
+                <div class="modal-card">
+                    <span class="modal-close">&times;</span>
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="modalLectureName"></h2>
+                        <div class="modal-subheader">
+                            <span class="modal-date" id="modalLectureDate"></span>
+                            <span class="modal-status" id="modalLectureStatus"></span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-grid">
+                            <div class="modal-field">
+                                <span class="field-label">📝 Description</span>
+                                <span class="field-value" id="modalLectureDescription"></span>
+                            </div>
+                            <div class="modal-field">
+                                <span class="field-label">📦 Type</span>
+                                <span class="field-value" id="modalLectureType"></span>
+                            </div>
+                            <div class="modal-field">
+                                <span class="field-label">👥 Students</span>
+                                <span class="field-value" id="modalLectureStudentLimit"></span>
+                            </div>
+                            <div class="modal-field">
+                                <span class="field-label">⏰ Start Time</span>
+                                <span class="field-value" id="modalLectureStartTime"></span>
+                            </div>
+                            <div class="modal-field">
+                                <span class="field-label">⏰ End Time</span>
+                                <span class="field-value" id="modalLectureEndTime"></span>
+                            </div>
+                            <div class="modal-field">
+                                <span class="field-label">👨🏫 Lecturer</span>
+                                <span class="field-value" id="modalLecturerName"></span>
+                            </div>
+                        </div>
+                    </div>
+                @if (User.IsInRole(Utility.StaticDetails.AdminRole))
+                {
+                    <div class="student-list">
+                        <h3 class="student-list-title">Participating Students</h3>
+                        <div class="student-list-container" id="studentList">
+                            <!-- Student items will be dynamically inserted here -->
+                        </div>
+                    </div>
+                }
+                    <div class="modal-footer">
+                        <div class="modal-actions">
+                            <a id="applyButton" class="btn btn-primary">Apply to Lecture</a>
+                            @if (User.IsInRole(StaticDetails.AdminRole))
+                            {
+                                <a id="EditButton" class="btn btn-secondary">Edit</a>
+                                <a id="RemoveButton" class="btn btn-danger">Delete</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@section Scripts {
+    <script>
+        function populateInput(value, button) {
+            document.getElementById('LectureType').value = value;
+            resetButtonStyles('.Type button');
+            button.style.backgroundColor = "#e0e0e0";
+            submitThis();
+        }
+
+        function populateStatus(value, button) {
+            document.getElementById('LectureStatus').value = value;
+            resetButtonStyles('.status button');
+            button.style.backgroundColor = "#e0e0e0";
+            submitThis();
+        }
+
+        function resetButtonStyles(selector) {
+            const buttons = document.querySelectorAll(selector);
+            buttons.forEach(btn => btn.style.backgroundColor = "#f1f1f1");
+        }
+
+        function updateStartDate(value) {
+            document.getElementById("startDateValue").innerText = value;
+            submitThis();
+        }
+
+        function updateEndDate(value) {
+            document.getElementById("endDateValue").innerText = value;
+            submitThis();
+        }
+
+        function updateMaxLimit(value) {
+            document.getElementById("maxValue").innerText = value;
+            document.getElementById("MaxLimit").value = value;
+
+        }
+        function submitThis(){
+            document.getElementById("generalSubmit").click();
+        }
+
+        function setUpButtons() {
+            var typeValue = document.getElementById('LectureType').value
+            switch(typeValue)
+            {
+                case "OCCUPAED":
+                    resetButtonStyles('.Type button');
+                    document.getElementById("OccupiedBtn").style.backgroundColor = "#0a0a0a";
+                    document.getElementById("OccupiedBtn").style.color = "#fafafa";
+
+                    break;
+                case "OPEN":
+                    resetButtonStyles('.Type button');
+                    document.getElementById("OpenBtn").style.backgroundColor = "#0a0a0a";
+                    document.getElementById("OpenBtn").style.color = "#fafafa";
+
+                break;
+            }
+            var statusValue = document.getElementById('LectureStatus').value
+            switch (statusValue) {
+                case "FINISHED":
+                    resetButtonStyles('.status button');
+                    document.getElementById("FinishedBtn").style.backgroundColor = "#0a0a0a";
+                    document.getElementById("FinishedBtn").style.color = "#fafafa";
+
+                    break;
+                case "AWAITS":
+                    resetButtonStyles('.status button');
+                    document.getElementById("AwaitsBtn").style.backgroundColor = "#0a0a0a";
+                    document.getElementById("AwaitsBtn").style.color = "#fafafa";
+
+                    break;
+                case "CANCELED":
+                    resetButtonStyles('.status button');
+                    document.getElementById("CanceledBtn").style.backgroundColor = "#0a0a0a";
+                    document.getElementById("CanceledBtn").style.color = "#fafafa";
+
+                    break;
+            }
+
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('lectureModal');
+        const closeBtn = document.querySelector('.modal-close'); // Was '.close'
+
+            // Show modal
+            document.querySelectorAll('.lecture-card').forEach(card => {
+                card.addEventListener('click', async function() {
+                    const lectureId = this.dataset.lectureId;
+                    const lecture = await getLectureById(lectureId);
+                    if (lecture) {
+                        populateModal(lecture);
+                        modal.style.display = 'flex';
+                    }
+                });
+            });
+
+            // Close modal
+            function closeModal() {
+                document.getElementById('lectureModal').style.display = 'none';
+                }
+
+            // Event listeners
+            closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            async function getLectureById(id) {
+                try {
+                    const response = await fetch(`/Control/lecture/GetLecture/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching lecture:', error);
+                }
+            }
+
+            function populateModal(lecture) {
+                var button1 = document.getElementById('EditButton');
+                if (button1 != null) {
+                    button1.setAttribute('href', "/Control/Lecture/EditLecture/" + lecture.id);
+                }
+                var button2 = document.getElementById('EditButton');
+                if (button2 != null) {
+                    button2.setAttribute('href', "/Control/Lecture/RemoveLecture/" + lecture.id);
+                }
+
+                document.getElementById('applyButton').setAttribute('href', "/Control/Lecture/Apply/" + lecture.id);
+
+                document.getElementById('modalLectureName').textContent = lecture.name;
+                document.getElementById('modalLectureDate').textContent = new Date(lecture.lectureStartTime).toLocaleDateString();
+                document.getElementById('modalLectureDescription').textContent = lecture.description;
+                document.getElementById('modalLectureType').textContent = lecture.type;
+                document.getElementById('modalLectureStudentLimit').textContent = (lecture.students ? lecture.students.length : "0") + "/" +  lecture.studentLimit;
+                document.getElementById('modalLectureStatus').textContent = lecture.lectureStatus;
+                document.getElementById('modalLectureStartTime').textContent = new Date(lecture.lectureStartTime).toLocaleTimeString();
+                document.getElementById('modalLectureEndTime').textContent = new Date(lecture.lectureEndTIme).toLocaleTimeString();
+                document.getElementById('modalLecturerName').textContent = lecture.lecturer ? lecture.lecturer.name : 'Not available';
+
+                     // Populate students only for admins
+        @if (User.IsInRole(Utility.StaticDetails.AdminRole))
+        {
+            <text>
+                const studentList = document.getElementById('studentList');
+                studentList.innerHTML = ''; // Clear existing content
+
+                if (lecture.students && lecture.students.length > 0) {
+                    lecture.students.forEach(student => {
+                        const studentEl = document.createElement('div');
+                        studentEl.className = 'student-item';
+
+                        // Create avatar with initial
+                        const avatar = document.createElement('div');
+                        avatar.className = 'student-avatar';
+                        avatar.textContent = student.name ? student.name.charAt(0).toUpperCase() : '?';
+
+                        // Student info
+                        const info = document.createElement('div');
+                        info.className = 'student-info';
+
+                        const name = document.createElement('div');
+                        name.className = 'student-name';
+                        name.textContent = student.name || 'Unknown Student';
+
+                        const email = document.createElement('div');
+                        email.className = 'student-email';
+                        email.textContent = student.email;
+
+                        info.appendChild(name);
+                        info.appendChild(email);
+
+                        studentEl.appendChild(avatar);
+                        studentEl.appendChild(info);
+                        studentList.appendChild(studentEl);
+                    });
+                } else {
+                    const empty = document.createElement('div');
+                    empty.className = 'no-students';
+                    empty.textContent = 'No students have joined yet';
+                    studentList.appendChild(empty);
+                }
+            </text>
+        }
+            }
+        });
+        window.onload = setUpButtons;
+    </script>
+}

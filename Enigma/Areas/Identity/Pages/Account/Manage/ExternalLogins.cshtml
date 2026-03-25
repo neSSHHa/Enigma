@@ -1,0 +1,226 @@
+﻿@page
+@model ExternalLoginsModel
+@{
+    ViewData["Title"] = "Connected Accounts";
+    ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
+}
+
+<div class="connected-accounts-container">
+    <div class="security-card">
+        <header class="security-header">
+            <h1 class="security-title">External Account Connections</h1>
+            <p class="security-subtitle">Manage your third-party login providers</p>
+        </header>
+
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        @if (Model.CurrentLogins?.Count > 0)
+        {
+            <div class="connected-services">
+                <h3>Linked Accounts</h3>
+                <div class="service-list">
+                    @foreach (var login in Model.CurrentLogins)
+                    {
+                        <div class="service-card" id="@($"login-provider-{login.LoginProvider}")">
+                            <div class="service-info">
+                                <img src="/images/auth-providers/@(login.LoginProvider.ToLower()).svg"
+                                     alt="@login.ProviderDisplayName logo"
+                                     class="service-logo">
+                                <span class="service-name">@login.ProviderDisplayName</span>
+                            </div>
+                            @if (Model.ShowRemoveButton)
+                            {
+                                <form id="@($"remove-login-{login.LoginProvider}")"
+                                      asp-page-handler="RemoveLogin"
+                                      method="post">
+                                    <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                    <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
+                                    <button type="submit" class="remove-button"
+                                            title="Remove @login.ProviderDisplayName connection">
+                                        <svg class="trash-icon" viewBox="0 0 24 24">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.OtherLogins?.Count > 0)
+        {
+            <div class="add-services">
+                <h3>Connect New Account</h3>
+                <form id="link-login-form" asp-page-handler="LinkLogin" method="post">
+                    <div class="auth-providers">
+                        @foreach (var provider in Model.OtherLogins)
+                        {
+                            <button id="@($"link-login-button-{provider.Name}")"
+                                    type="submit"
+                                    class="auth-provider @provider.Name.ToLower()"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Connect your @provider.DisplayName account">
+                                <img src="/images/auth-providers/@(provider.Name.ToLower()).svg"
+                                     alt="@provider.DisplayName logo"
+                                     class="provider-logo">
+                                <span>Connect @provider.DisplayName</span>
+                            </button>
+                        }
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --destructive: #dc2626;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    .connected-accounts-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .security-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+    }
+
+    .security-header {
+        margin-bottom: 2rem;
+    }
+
+    .security-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .security-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .connected-services h3,
+    .add-services h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .service-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .service-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .service-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .service-logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    .service-name {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .remove-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+    }
+
+        .remove-button:hover {
+            color: var(--destructive);
+        }
+
+    .trash-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .auth-providers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .auth-provider {
+        flex: 1;
+        min-width: 200px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        background: white;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+        .auth-provider:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-provider.google {
+            color: #4285f4;
+            border-color: #e0e0e0;
+        }
+
+        .auth-provider.microsoft {
+            color: #00a1f1;
+            border-color: #e0e0e0;
+        }
+
+        .auth-provider.facebook {
+            color: #1877f2;
+            border-color: #e0e0e0;
+        }
+
+    .provider-logo {
+        width: 24px;
+        height: 24px;
+    }
+
+    @@media (max-width: 480px) {
+        .auth-provider {
+            width: 100%;
+        }
+    }
+</style>

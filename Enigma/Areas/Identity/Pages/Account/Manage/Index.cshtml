@@ -1,0 +1,249 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile Settings";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <h1 class="profile-title">Profile Settings</h1>
+            <p class="profile-subtitle">Manage your account information</p>
+        </div>
+
+        <div class="profile-content">
+            <form id="profile-form" method="post" enctype="multipart/form-data" class="profile-form">
+
+            <div class="avatar-section">
+                <div class="avatar-upload">
+                    @if (string.IsNullOrEmpty(Model.OldImage))
+                    {
+                        <img src="/images/user.png" alt="Profile avatar" class="profile-avatar">
+                    }
+                    else
+                    {
+                        <img src="@Model.OldImage" alt="Profile avatar" class="profile-avatar">
+                    }
+                    <label class="avatar-overlay">
+                        <input type="file" name="file" class="avatar-input">
+                        <svg class="camera-icon" viewBox="0 0 24 24">
+                            <path d="M12 15a3 3 0 100-6 3 3 0 000 6zm10-8v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2h3l2-3h6l2 3h3a2 2 0 012 2z" />
+                        </svg>
+                    </label>
+                </div>
+            </div>
+
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <div class="form-group">
+                    <label class="input-label">Email</label>
+                    <input asp-for="Email" class="form-input disabled" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Tokens</label>
+                    <input asp-for="Tokens" class="form-input disabled" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Name" class="input-label">Full Name</label>
+                    <input asp-for="Input.Name" class="form-input" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.PhoneNumber" class="input-label">Phone Number</label>
+                    <input asp-for="Input.PhoneNumber" class="form-input" placeholder="+1 (555) 123-4567">
+                    <span asp-validation-for="Input.PhoneNumber" class="validation-error"></span>
+                </div>
+
+                <button type="submit" class="save-button">
+                    Save Changes
+                    <svg class="button-icon" viewBox="0 0 24 24">
+                        <path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --background-dark: #1a1a1a;
+        --surface-dark: #2d2d2d;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a3a3a3;
+        --border-color: #404040;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .profile-card {
+        background: var(--surface-dark);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .profile-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    .avatar-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .avatar-upload {
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--border-color);
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar-upload:hover .avatar-overlay {
+        opacity: 1;
+    }
+
+    .camera-icon {
+        width: 32px;
+        height: 32px;
+        color: white;
+    }
+
+    .avatar-input {
+        display: none;
+    }
+
+    .profile-form {
+        display: grid;
+        gap: 1.5rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .input-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: var(--background-dark);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-input.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+    .save-button {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+        margin-top: 1rem;
+    }
+
+        .save-button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .button-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .validation-summary {
+        color: #dc2626;
+        padding: 1rem;
+        background: #2d2d2d;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .validation-error {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    @@media (max-width: 640px) {
+        .profile-card {
+            padding: 1.5rem;
+        }
+
+        .profile-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>

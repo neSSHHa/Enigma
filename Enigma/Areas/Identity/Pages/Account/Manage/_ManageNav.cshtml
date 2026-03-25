@@ -1,0 +1,107 @@
+﻿@using Models.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --hover-bg: #f8fafc;
+        --active-bg: #eef2ff;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    .settings-nav {
+        background: white;
+        border-radius: 12px;
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .nav-item {
+        margin: 2px 0;
+        position: relative;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+        .nav-link:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background: var(--active-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+            .nav-link.active::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                height: 60%;
+                width: 3px;
+                background: var(--primary-color);
+                border-radius: 0 4px 4px 0;
+            }
+
+    .bi {
+        font-size: 1.1em;
+        width: 24px;
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<nav class="settings-nav">
+    <ul class="d-flex flex-column list-unstyled m-0">
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">
+                <i class="bi bi-person-circle"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">
+                <i class="bi bi-envelope"></i>
+                <span>Email</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">
+                <i class="bi bi-lock"></i>
+                <span>Password</span>
+            </a>
+        </li>
+        @if (hasExternalLogins)
+        {
+            <li class="nav-item" id="external-logins">
+                <a class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" id="external-login" asp-page="./ExternalLogins">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>External Logins</span>
+                </a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">
+                <i class="bi bi-shield-lock"></i>
+                <span>Two-Factor Auth</span>
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,164 @@
+﻿@page
+@model ResetAuthenticatorModel
+@{
+    ViewData["Title"] = "Security Key Reset";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="security-container">
+    <div class="security-card critical-action">
+        <header class="security-header">
+            <h1 class="security-title">Reset Authenticator Key</h1>
+            <p class="security-subtitle">Manage your two-factor authentication settings</p>
+        </header>
+
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        <div class="critical-warning">
+            <div class="warning-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+            </div>
+            <div class="warning-content">
+                <h3 class="warning-title">Security Impact Warning</h3>
+                <ul class="warning-list">
+                    <li>Current authenticator key will be immediately invalidated</li>
+                    <li>Two-factor authentication will be disabled until reconfigured</li>
+                    <li>Account access may be lost if not properly reconfigured</li>
+                </ul>
+            </div>
+        </div>
+
+        <form id="reset-authenticator-form" method="post">
+            <button id="reset-authenticator-button"
+                    class="destructive-btn"
+                    type="submit"
+                    onclick="return confirm('WARNING: This will disable 2FA until reconfigured. Continue?')">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                </svg>
+                Reset Security Key
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    :root {
+        --destructive: #dc2626;
+        --destructive-hover: #b91c1c;
+        --warning-bg: #fffbeb;
+        --warning-border: #f59e0b;
+        --warning-text: #92400e;
+        --text-primary: #f5f5f5;
+        --surface-dark: #2d2d2d;
+    }
+
+    .security-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .security-card {
+        background: var(--surface-dark);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .security-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .security-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .security-subtitle {
+        color: #a3a3a3;
+        font-size: 1rem;
+    }
+
+    .critical-warning {
+        display: flex;
+        gap: 1.5rem;
+        padding: 2rem;
+        background: var(--warning-bg);
+        border-radius: 1rem;
+        margin: 2rem 0;
+    }
+
+    .warning-icon {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        color: var(--warning-border);
+    }
+
+    .warning-content {
+        color: var(--warning-text);
+    }
+
+    .warning-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .warning-list {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+        .warning-list li {
+            margin-bottom: 0.5rem;
+        }
+
+    .destructive-btn {
+        width: 100%;
+        padding: 1.25rem;
+        background: var(--destructive);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        transition: all 0.2s ease;
+    }
+
+        .destructive-btn:hover {
+            background: var(--destructive-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.2);
+        }
+
+    .btn-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    @@media (max-width: 640px) {
+        .security-card {
+            padding: 1.5rem;
+        }
+
+        .critical-warning {
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .security-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>

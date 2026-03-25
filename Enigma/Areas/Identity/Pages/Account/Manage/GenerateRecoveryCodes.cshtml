@@ -1,0 +1,182 @@
+﻿@page
+@model GenerateRecoveryCodesModel
+@{
+    ViewData["Title"] = "Two-Factor Recovery Codes";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<div class="security-container">
+    <div class="security-card">
+        <header class="security-header">
+            <h1 class="security-title">Generate Recovery Codes</h1>
+            <p class="security-subtitle">Secure backup access for your two-factor authentication</p>
+        </header>
+
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        <div class="critical-warning">
+            <div class="warning-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+            </div>
+            <div class="warning-content">
+                <h3 class="warning-title">Important Security Notice</h3>
+                <div class="warning-text">
+                    <p>These recovery codes are your last resort access method. Store them securely:</p>
+                    <ul class="warning-list">
+                        <li>Losing both your device and recovery codes means permanent account lockout</li>
+                        <li>New codes invalidate previous ones immediately</li>
+                        <li>Does not affect existing authenticator app configurations</li>
+                    </ul>
+                    <p class="text-sm">
+                        To rotate authenticator keys,
+                        <a asp-page="./ResetAuthenticator" class="warning-link">reset your authenticator</a>
+                        first.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="security-actions">
+            <button class="destructive-btn" type="submit"
+                    onclick="return confirm('Are you sure you want to generate new recovery codes? This will invalidate any existing codes.')">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                    <path d="M12 8v4m0 0v4m0-4h4m-4 0H8m12-4a8 8 0 11-16 0 8 8 0 0116 0z" />
+                </svg>
+                Generate New Recovery Codes
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    :root {
+        --warning-bg: #fffbeb;
+        --warning-border: #f59e0b;
+        --warning-text: #92400e;
+        --destructive: #dc2626;
+        --destructive-hover: #b91c1c;
+    }
+
+    .security-container {
+        max-width: 640px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .security-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+    }
+
+    .security-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .security-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .security-subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .critical-warning {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--warning-bg);
+        border-left: 4px solid var(--warning-border);
+        border-radius: 0.5rem;
+        margin: 2rem 0;
+    }
+
+    .warning-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        color: var(--warning-border);
+    }
+
+        .warning-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+    .warning-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--warning-text);
+        margin-bottom: 1rem;
+    }
+
+    .warning-text {
+        color: var(--warning-text);
+        line-height: 1.6;
+    }
+
+    .warning-list {
+        margin: 1rem 0;
+        padding-left: 1.25rem;
+    }
+
+        .warning-list li {
+            margin-bottom: 0.5rem;
+        }
+
+    .warning-link {
+        color: var(--warning-text);
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    .destructive-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--destructive);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+        .destructive-btn:hover {
+            background: var(--destructive-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.2);
+        }
+
+    .btn-icon {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+    }
+
+    @@media (max-width: 480px) {
+        .security-card {
+            padding: 1.5rem;
+        }
+
+        .security-title {
+            font-size: 1.25rem;
+        }
+
+        .critical-warning {
+            flex-direction: column;
+        }
+    }
+</style>

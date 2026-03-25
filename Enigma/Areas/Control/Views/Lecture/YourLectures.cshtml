@@ -1,0 +1,366 @@
+﻿@using Models.Models
+@using Utility
+@model IEnumerable<Lecture>
+@{
+    ViewData["Title"] = "YourLectures";
+}
+<style>
+    :root {
+        --primary: #2563EB;
+        --primary-hover: #1D4ED8;
+        --surface: #FFFFFF;
+        --background: #F8FAFC;
+        --text-primary: #1E293B;
+        --text-secondary: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: var(--background);
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .lectures {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .lecture-card {
+        background: var(--surface);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .lecture-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .lecture-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+        }
+
+    .lecture-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .lecture-name h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .lecture-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .lecture-time {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+        .lecture-time p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+            .lecture-time p span {
+                font-weight: 500;
+                color: var(--text-primary);
+            }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .modal-card {
+        background: var(--surface);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        box-shadow: var(--shadow);
+    }
+
+    .modal-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .modal-subheader {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+
+    .modal-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .modal-status {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+    }
+
+    .modal-body {
+        margin-top: 1.5rem;
+    }
+
+    .modal-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .field-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .field-value {
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .modal-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background: #bb2d3b;
+        }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: color 0.2s;
+    }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+    @@media (max-width: 768px) {
+        .lectures {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="lectures">
+        @foreach (var lecture in Model)
+        {
+            <div class="lecture-card" data-lecture-id="@lecture.Id">
+                <div class="lecture-header">
+                    <div class="lecture-name">
+                        <h2>@lecture.Name</h2>
+                    </div>
+                    <div class="lecture-date">
+                        <p>@lecture.LectureStartTime.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                </div>
+                <div class="lecture-time">
+                    <p>Start: <span>@lecture.LectureStartTime.ToString("HH:mm")</span></p>
+                    <p>End: <span>@lecture.LectureEndTIme.ToString("HH:mm")</span></p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="lectureModal" class="modal-overlay">
+    <div class="modal-card">
+        <span class="modal-close">&times;</span>
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalLectureName"></h2>
+            <div class="modal-subheader">
+                <span class="modal-date" id="modalLectureDate"></span>
+                <span class="modal-status" id="modalLectureStatus"></span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="modal-field">
+                <span class="field-label">Description</span>
+                <span class="field-value" id="modalLectureDescription"></span>
+            </div>
+            <div class="modal-field">
+                <span class="field-label">Type</span>
+                <span class="field-value" id="modalLectureType"></span>
+            </div>
+            <div class="modal-field">
+                <span class="field-label">Student Limit</span>
+                <span class="field-value" id="modalLectureStudentLimit"></span>
+            </div>
+            <div class="modal-field">
+                <span class="field-label">Start Time</span>
+                <span class="field-value" id="modalLectureStartTime"></span>
+            </div>
+            <div class="modal-field">
+                <span class="field-label">End Time</span>
+                <span class="field-value" id="modalLectureEndTime"></span>
+            </div>
+            <div class="modal-field">
+                <span class="field-label">Lecturer</span>
+                <span class="field-value" id="modalLecturerName"></span>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <a id="applyButton" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+                document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('lectureModal');
+            const closeBtn = document.querySelector('.modal-close');
+
+            // Show modal
+            document.querySelectorAll('.lecture-card').forEach(card => {
+                card.addEventListener('click', async function () {
+                    const lectureId = this.getAttribute('data-lecture-id'); // Correctly get the lecture ID
+                    if (!lectureId) {
+                        console.error('Lecture ID is missing');
+                        return;
+                    }
+
+                    const lecture = await getLectureById(lectureId); // Pass the lectureId to the function
+                    if (lecture) {
+                        populateModal(lecture);
+                        modal.style.display = 'flex';
+                    }
+                });
+            });
+
+            // Close modal
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            async function getLectureById(id) {
+                try {
+                    const response = await fetch(`/Control/lecture/GetLecture/${id}`); // Use the id parameter
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching lecture:', error);
+                }
+            }
+
+            function populateModal(lecture) {
+                document.getElementById('applyButton').setAttribute('href', `/Control/Lecture/Cancel/${lecture.id}`);
+
+                document.getElementById('modalLectureName').textContent = lecture.name;
+                document.getElementById('modalLectureDate').textContent = new Date(lecture.lectureStartTime).toLocaleDateString();
+                document.getElementById('modalLectureDescription').textContent = lecture.description;
+                document.getElementById('modalLectureType').textContent = lecture.type;
+                document.getElementById('modalLectureStudentLimit').textContent = `${lecture.students?.length || 0}/${lecture.studentLimit}`;
+                document.getElementById('modalLectureStatus').textContent = lecture.lectureStatus;
+                document.getElementById('modalLectureStartTime').textContent = new Date(lecture.lectureStartTime).toLocaleTimeString();
+                document.getElementById('modalLectureEndTime').textContent = new Date(lecture.lectureEndTIme).toLocaleTimeString();
+                document.getElementById('modalLecturerName').textContent = lecture.lecturer?.name || 'Not available';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,575 @@
+﻿@{
+    ViewData["Title"] = "Global Lingua Pro";
+}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="World-class language translation and localization services">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A365D;
+            --accent: #FF6B6B;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+            --gradient: linear-gradient(135deg, #1A365D 0%, #2C5282 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+    .main-content{
+        padding: 0;
+    }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .full-bleed {
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            background: var(--gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            padding: 4rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            position: absolute;
+            bottom: -5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            background: white;
+            padding: 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            z-index: 3;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            padding: 8rem 0;
+        }
+
+        .service-card {
+            padding: 3rem;
+            border-radius: 2rem;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .service-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 8rem 0;
+        }
+
+        .pricing-tier {
+            padding: 2.5rem;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            background: white;
+        }
+
+            .pricing-tier:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            }
+
+            .pricing-tier.professional {
+                transform: scale(1.05);
+                z-index: 2;
+                border-color: var(--accent);
+                box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+                background: var(--primary);
+                color: white;
+            }
+            .pricing-tier.custome{
+            background: var(--dark);
+            box-shadow: 0 25px 50px -12px rgba(48,45,48,0.25);
+            border-color: var(--accent);
+        }
+
+        .pricing-features li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+            .pricing-features li::before {
+                content: '✓';
+                position: absolute;
+                left: 0;
+                color: var(--accent);
+            }
+
+        /* Language Section */
+        .language-carousel {
+            display: flex;
+            gap: 2rem;
+            padding: 4rem 0;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            position: relative;
+        }
+
+            .language-carousel::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 100px;
+                background: linear-gradient(90deg, rgba(248,250,252,0) 0%, var(--light) 100%);
+            }
+
+        .language-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 1.5rem;
+            text-align: center;
+            flex-shrink: 0;
+            width: 220px;
+            scroll-snap-align: start;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+        }
+
+            .language-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            }
+
+        /* Testimonials */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            padding: 8rem 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+    .parallax-section {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        background-attachment: fixed;
+        background-size: cover;
+        position: relative;
+    }
+        /* Utilities */
+        .text-gradient {
+            background: linear-gradient(45deg, #FFD700 0%, #FF6B6B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            gap: 0.5rem;
+        }
+
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px -3px rgba(255,107,107,0.4);
+            }
+
+        .cta-reverse {
+            background: white;
+            color: var(--primary) !important;
+            border: 2px solid var(--primary);
+        }
+
+        /* Animations */
+        @@keyframes float {
+            0%, 100% {
+                transform: translateY(-50%) translateX(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-55%) translateX(2%) scale(1.02);
+            }
+        }
+
+        .staggered-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Styles */
+        @@media (max-width: 1024px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                height: auto;
+                padding: 6rem 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                position: static;
+                transform: none;
+                width: 100%;
+                margin-top: 2rem;
+                padding: 2rem;
+            }
+
+            .services-grid,
+            .pricing-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-tier.professional {
+                transform: none;
+                order: -1;
+            }
+
+            .language-card {
+                width: 180px;
+            }
+
+            .hero-content {
+                padding: 2rem;
+            }
+        }
+
+        @@media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <video autoplay muted loop class="hero-video">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-earth-view-from-space-1128.mp4" type="video/mp4">
+            </video>
+
+            <div class="container">
+                <div class="hero-content">
+                    <img src="https://placehold.co/200x60/FFF/1A365D?text=Global+Lingua+Pro&font=inter" alt="Global Lingua Pro Logo" class="mb-8">
+                    <h1 class="staggered-item" style="font-size: 4rem; margin-bottom: 2rem;">
+                        <span class="text-gradient">World-Class</span> Language Solutions
+                    </h1>
+                    <p class="staggered-item" style="font-size: 1.5rem; margin-bottom: 3rem;">
+                        Precision translations powered by AI-enhanced human expertise
+                    </p>
+                    <div class="staggered-item">
+                        <a href="#pricing" class="cta-button">Start Global Journey →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item text-center">
+                    <div class="text-4xl font-bold text-primary">150+</div>
+                    <div class="text-sm">Languages Supported</div>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="text-4xl font-bold text-primary">5K+</div>
+                    <div class="text-sm">Professional Translators</div>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="text-4xl font-bold text-primary">1M+</div>
+                    <div class="text-sm">Projects Completed</div>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="text-4xl font-bold text-primary">98%</div>
+                    <div class="text-sm">Client Satisfaction</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="container">
+            <div class="services-grid">
+                <div class="service-card staggered-item">
+                    <div class="icon-box mb-4 text-4xl">🌐</div>
+                    <h3 class="text-2xl font-bold mb-3">Enterprise Translation</h3>
+                    <p class="text-gray-600">Secure, scalable solutions for technical documentation, legal contracts, and multinational campaigns.</p>
+                </div>
+                <div class="service-card staggered-item">
+                    <div class="icon-box mb-4 text-4xl">🤖</div>
+                    <h3 class="text-2xl font-bold mb-3">AI-Powered Localization</h3>
+                    <p class="text-gray-600">Context-aware machine translation with human quality assurance for rapid deployment.</p>
+                </div>
+                <div class="service-card staggered-item">
+                    <div class="icon-box mb-4 text-4xl">🏥</div>
+                    <h3 class="text-2xl font-bold mb-3">Industry Specialists</h3>
+                    <p class="text-gray-600">Medical, legal, and technical translations certified by subject matter experts.</p>
+                </div>
+            </div>
+        </section>
+
+    <section class="parallax-section" style="background-image: url('https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg')">
+        <div class="container">
+            <div class="text-white relative z-10">
+                <h2 class="text-4xl mb-4">Human Expertise, AI Precision</h2>
+                <p class="text-xl max-w-2xl">Our hybrid model combines the nuance of native speakers with machine learning efficiency</p>
+            </div>
+        </div>
+    </section>
+
+        <!-- Testimonials -->
+        <section class="container">
+            <div class="testimonial-grid">
+                <div class="testimonial-card staggered-item">
+                    <img src="https://i.pravatar.cc/80?img=1" alt="Sarah Johnson" class="rounded-full mb-4 w-20 h-20">
+                    <h4 class="font-bold mb-2">Sarah Johnson</h4>
+                    <p class="text-sm text-gray-500">Localization Manager, TechCorp</p>
+                    <p class="mt-4 italic">"The quality and speed transformed our global rollout process."</p>
+                </div>
+                <div class="testimonial-card staggered-item">
+                    <img src="https://i.pravatar.cc/80?img=2" alt="Michael Chen" class="rounded-full mb-4 w-20 h-20">
+                    <h4 class="font-bold mb-2">Michael Chen</h4>
+                    <p class="text-sm text-gray-500">CEO, MedPharma Solutions</p>
+                    <p class="mt-4 italic">"Precision-critical translations handled with expert care."</p>
+                </div>
+                <div class="testimonial-card staggered-item">
+                    <img src="https://i.pravatar.cc/80?img=3" alt="Emma Müller" class="rounded-full mb-4 w-20 h-20">
+                    <h4 class="font-bold mb-2">Emma Müller</h4>
+                    <p class="text-sm text-gray-500">CMO, Global Fashion Group</p>
+                    <p class="mt-4 italic">"Cultural nuance perfection for 22 regional markets."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="full-bleed bg-dark text-white">
+            <div class="container">
+            <div class="pricing-grid">
+                <div class="pricing-tier custome">
+                        <h3 class="text-2xl font-bold mb-4">Starter</h3>
+                        <div class="text-4xl font-bold mb-6">$0.12<span class="text-lg">/word</span></div>
+                        <ul class="pricing-features space-y-3 mb-8 text-gray-600">
+                            <li>3-Day Standard Delivery</li>
+                            <li>Single Proofreading</li>
+                            <li>Email Support</li>
+                            <li>Up to 5,000 words/month</li>
+                        </ul>
+                        <button class="cta-button w-full">Start Basic</button>
+                    </div>
+
+                    <div class="pricing-tier professional">
+                        <div class="absolute top-0 right-0 bg-accent text-white px-4 py-1 rounded-bl-2xl text-sm">Most Popular</div>
+                        <h3 class="text-2xl font-bold mb-4">Professional</h3>
+                        <div class="text-4xl font-bold mb-6">$0.20<span class="text-lg">/word</span></div>
+                        <ul class="pricing-features space-y-3 mb-8">
+                            <li>24-Hour Rush Service</li>
+                            <li>Dual Expert Review</li>
+                            <li>Priority Support</li>
+                            <li>Unlimited Words</li>
+                            <li>Glossary Management</li>
+                        </ul>
+                        <button class="cta-button cta-reverse w-full">Go Professional</button>
+                    </div>
+
+                    <div class="pricing-tier custome">
+                        <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
+                        <div class="text-4xl font-bold mb-6">Custom</div>
+                        <ul class="pricing-features space-y-3 mb-8 text-gray-600">
+                            <li>Dedicated Team</li>
+                            <li>API Integration</li>
+                            <li>24/7 Premium Support</li>
+                            <li>Advanced Analytics</li>
+                            <li>Custom Workflows</li>
+                        </ul>
+                        <button class="cta-button w-full">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Languages Section -->
+        <section class="container">
+            <h2 class="text-3xl font-bold mb-8 text-center">150+ Supported Languages</h2>
+            <div class="language-carousel">
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🇬🇧</div>
+                    <div class="font-bold mb-1">English</div>
+                    <div class="text-sm text-gray-500 mb-3">Global Business</div>
+                    <div class="language-family text-xs">Indo-European</div>
+                </div>
+
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🇨🇳</div>
+                    <div class="font-bold mb-1">Mandarin</div>
+                    <div class="text-sm text-gray-500 mb-3">Simplified/Traditional</div>
+                    <div class="language-family text-xs">Sino-Tibetan</div>
+                </div>
+
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🇸🇦</div>
+                    <div class="font-bold mb-1">Arabic</div>
+                    <div class="text-sm text-gray-500 mb-3">MSA & Dialects</div>
+                    <div class="language-family text-xs">Semitic</div>
+                </div>
+
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🇮🇳</div>
+                    <div class="font-bold mb-1">Hindi</div>
+                    <div class="text-sm text-gray-500 mb-3">Devanagari Script</div>
+                    <div class="language-family text-xs">Indo-Aryan</div>
+                </div>
+
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🇳🇬</div>
+                    <div class="font-bold mb-1">Hausa</div>
+                    <div class="text-sm text-gray-500 mb-3">West Africa</div>
+                    <div class="language-family text-xs">Chadic</div>
+                </div>
+
+                <div class="language-card">
+                    <div class="text-4xl mb-2">🏴</div>
+                    <div class="font-bold mb-1">Quechua</div>
+                    <div class="text-sm text-gray-500 mb-3">Andean Region</div>
+                    <div class="language-family text-xs">Quechuan</div>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button class="cta-button" onclick="showAllLanguages()">View All 150+ Languages</button>
+            </div>
+        </section>
+    </div>
+
+    @section Scripts {
+        <script>
+            // Intersection Observer for animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible')
+                    }
+                })
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            })
+
+            document.querySelectorAll('.staggered-item').forEach((el, index) => {
+                el.style.transitionDelay = `${index * 0.1}s`
+                observer.observe(el)
+            })
+
+            // Parallax effect
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset
+                document.querySelector('.parallax-section').style.backgroundPositionY = `${scrolled * 0.5}px`
+            })
+
+            // Language expansion
+            function showAllLanguages() {
+                const carousel = document.querySelector('.language-carousel')
+                const newCards = Array.from({length: 12}, (_, i) => `
+                    <div class="language-card">
+                        <div class="text-4xl mb-2">🇺🇸</div>
+                        <div class="font-bold mb-1">Language ${i+7}</div>
+                        <div class="text-sm text-gray-500 mb-3">Specialization</div>
+                        <div class="language-family text-xs">Language Family</div>
+                    </div>
+                `).join('')
+                carousel.innerHTML += newCards
+            }
+
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault()
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    })
+                })
+            })
+        </script>
+    }

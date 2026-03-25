@@ -1,0 +1,290 @@
+﻿@page
+@model LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-Step Verification";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16h4v-2h-4v2zm0-4h4V7h-4v6z" />
+                </svg>
+            </div>
+            <h1 class="auth-title">Two-Step Verification</h1>
+            <p class="auth-subtitle">Enter your authenticator app code</p>
+        </div>
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl" class="auth-form">
+            <input asp-for="RememberMe" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="input-group">
+                <label asp-for="Input.TwoFactorCode">Verification Code</label>
+                <div class="code-input-container">
+                    <input asp-for="Input.TwoFactorCode"
+                           class="code-input"
+                           autocomplete="off"
+                           placeholder="6-digit code"
+                           inputmode="numeric"
+                           pattern="\d{6}"
+                           maxlength="6">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                    </svg>
+                </div>
+                <span asp-validation-for="Input.TwoFactorCode" class="validation-error"></span>
+            </div>
+
+            <div class="remember-device">
+                <label class="checkbox-container">
+                    <input asp-for="Input.RememberMachine" />
+                    <span class="checkmark"></span>
+                    <span class="checkbox-label">Remember this device</span>
+                </label>
+            </div>
+
+            <button type="submit" class="auth-button">
+                Verify Identity
+                <svg class="button-icon" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+            </button>
+        </form>
+
+        <div class="recovery-option">
+            <a id="recovery-code-login"
+               asp-page="./LoginWithRecoveryCode"
+               asp-route-returnUrl="@Model.ReturnUrl"
+               class="recovery-link">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                Use recovery code instead
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --input-bg: #f8fafc;
+        --border-color: #e2e8f0;
+        --error-color: #dc2626;
+    }
+
+    .auth-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: #f1f5f9;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1.5rem;
+        color: var(--primary-color);
+    }
+
+        .auth-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+    .auth-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .auth-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .code-input-container {
+        position: relative;
+    }
+
+    .code-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        font-size: 1.25rem;
+        letter-spacing: 0.5em;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+        .code-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+    .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        color: var(--text-secondary);
+    }
+
+    .remember-device {
+        margin: 1rem 0;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+    }
+
+    .checkmark {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 0.375rem;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .checkbox-container input:checked ~ .checkmark {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .checkbox-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .checkbox-label {
+        color: var(--text-primary);
+        font-size: 0.9rem;
+    }
+
+    .auth-button {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+        .auth-button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .button-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .recovery-option {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .recovery-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: opacity 0.2s ease;
+    }
+
+        .recovery-link:hover {
+            opacity: 0.8;
+        }
+
+        .recovery-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+    .validation-summary {
+        color: var(--error-color);
+        padding: 1rem;
+        background: #fef2f2;
+        border-radius: 0.75rem;
+    }
+
+    .validation-error {
+        color: var(--error-color);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    @@media (max-width: 480px) {
+        .auth-card {
+            padding: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+        }
+
+        .code-input {
+            font-size: 1.1rem;
+        }
+    }
+</style>

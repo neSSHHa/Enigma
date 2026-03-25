@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "AboutUs";
+}
+
+<section style="background-color: #f4f4f4; padding: 60px 0;">
+    <div style="width: 80%; margin: 0 auto;">
+        <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 40px;">About Us</h1>
+
+        <!-- Introduction -->
+        <div style="text-align: center; margin-bottom: 60px;">
+            <p style="font-size: 1.2rem; line-height: 1.6;">
+                Welcome to our translation agency, where we specialize in bridging the language gap between Serbian and English. As a dedicated husband and wife team, we bring our passion for languages and cultural exchange to every project we undertake.
+            </p>
+        </div>
+
+        <!-- Team Members -->
+        <div style="display: flex; flex-direction: row; justify-content: space-between; flex-wrap: wrap; gap: 40px;">
+            <!-- Husband -->
+            <div style="flex: 1; min-width: 300px; text-align: center;">
+                <img src="images/husband.jpg" alt="Husband's Photo" style="width: 200px; height: 200px; border-radius: 100%; margin-bottom: 20px;">
+                <h3 style="font-size: 1.5rem;">[Husband's Name]</h3>
+                <p style="font-size: 1rem; line-height: 1.5;">
+                    With a deep understanding of the nuances of both Serbian and English, [Husband's Name] has been a professional translator for over [X] years. His expertise lies in legal, technical, and literary translations, ensuring accuracy and cultural relevance in every document.
+                </p>
+            </div>
+
+            <!-- Wife -->
+            <div style="flex: 1; min-width: 300px; text-align: center;">
+                <img src="images/wife.jpg" alt="Wife's Photo" style="width: 200px; height: 200px; border-radius: 100%; margin-bottom: 20px;">
+                <h3 style="font-size: 1.5rem;">[Wife's Name]</h3>
+                <p style="font-size: 1rem; line-height: 1.5;">
+                    [Wife's Name] brings her extensive experience in business and medical translations to the team. Her attention to detail and commitment to quality make her an invaluable asset to clients who need precise and clear communication across languages.
+                </p>
+            </div>
+        </div>
+
+        <!-- Our Mission -->
+        <div style="margin-top: 60px;">
+            <h2 style="font-size: 2rem; text-align: center; margin-bottom: 30px;">Our Mission</h2>
+            <p style="font-size: 1.2rem; line-height: 1.6; text-align: center;">
+                Our mission is to help individuals and businesses connect across borders through seamless and accurate translation services. We are dedicated to delivering translations that not only convey the literal meaning but also capture the essence of the original text, ensuring that your message resonates with your target audience.
+            </p>
+        </div>
+
+        <!-- Contact Us -->
+        <div style="margin-top: 60px; text-align: center;">
+            <a asp-action="ContactUs" class="btn btn-warning" style="font-size: 1.2rem; color: #fff; background-color: darkorange padding: 10px 20px; border-radius: 5px; text-decoration: none;">Get in Touch</a>
+        </div>
+    </div>
+</section>

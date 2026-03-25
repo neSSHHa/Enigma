@@ -1,0 +1,264 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Email Management";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<div class="email-management-container">
+    <div class="security-card">
+        <header class="security-header">
+            <h1 class="security-title">Email Address</h1>
+            <p class="security-subtitle">Update your account's email address</p>
+        </header>
+
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        <form id="email-form" method="post">
+            <div class="validation-summary" asp-validation-summary="All"></div>
+
+            <div class="email-status-group">
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="verified-email">
+                        <label>Current Email</label>
+                        <div class="verified-badge">
+                            <span>@Model.Email</span>
+                            <svg class="verified-icon" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </div>
+                        <span class="verified-text">Email verified</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="unverified-email">
+                        <label>Current Email</label>
+                        <div class="email-input-group">
+                            <input asp-for="Email" disabled placeholder="Enter email address">
+                            <button id="email-verification"
+                                    type="submit"
+                                    asp-page-handler="SendVerificationEmail"
+                                    class="verification-button">
+                                Verify Email
+                                <svg class="btn-icon" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="input-group">
+                <label asp-for="Input.NewEmail">New Email Address</label>
+                <input asp-for="Input.NewEmail"
+                       autocomplete="email"
+                       aria-required="true"
+                       placeholder="Enter new email address">
+                <span asp-validation-for="Input.NewEmail" class="validation-error"></span>
+            </div>
+
+            <button id="change-email-button"
+                    type="submit"
+                    asp-page-handler="ChangeEmail"
+                    class="security-btn">
+                Update Email Address
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                </svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --success-color: #16a34a;
+        --error-color: #dc2626;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    .email-management-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .security-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+    }
+
+    .security-header {
+        margin-bottom: 2rem;
+    }
+
+    .security-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .security-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .email-status-group {
+        margin-bottom: 2rem;
+    }
+
+    .verified-email {
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        padding: 1rem;
+    }
+
+    .verified-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0.5rem 0;
+    }
+
+    .verified-icon {
+        width: 20px;
+        height: 20px;
+        color: var(--success-color);
+    }
+
+    .verified-text {
+        color: var(--success-color);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .unverified-email {
+        background: #fff7ed;
+        border-radius: 0.75rem;
+        padding: 1rem;
+    }
+
+    .email-input-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+        .email-input-group input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: white;
+        }
+
+    .verification-button {
+        background: #ffedd5;
+        color: #c2410c;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+        .verification-button:hover {
+            background: #fed7aa;
+        }
+
+    .input-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+            .input-group input:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                outline: none;
+            }
+
+    .security-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+        .security-btn:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .btn-icon {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+    }
+
+    .validation-summary {
+        color: var(--error-color);
+        padding: 1rem;
+        background: #fef2f2;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .validation-error {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--error-color);
+        font-size: 0.875rem;
+    }
+
+    @@media (max-width: 480px) {
+        .security-card {
+            padding: 1.5rem;
+        }
+
+        .email-input-group {
+            flex-direction: column;
+        }
+
+        .verification-button {
+            justify-content: center;
+        }
+    }
+</style>

@@ -1,0 +1,205 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Complete Registration";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <header class="auth-header">
+            <div class="provider-logo">
+                <img src="/images/providers/@(Model.ProviderDisplayName.ToLower()).svg"
+                     alt="@Model.ProviderDisplayName logo">
+            </div>
+            <h1 class="auth-title">Link Your Account</h1>
+            <p class="auth-subtitle">Connect your @Model.ProviderDisplayName account</p>
+        </header>
+
+        <div class="auth-notice">
+            <svg class="info-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            <p>
+                You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+                Please provide an email address to complete your registration.
+            </p>
+        </div>
+
+        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="auth-form">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="input-group">
+                <label asp-for="Input.Email">Email Address</label>
+                <input asp-for="Input.Email"
+                       autocomplete="email"
+                       placeholder="Enter your email"
+                       class="auth-input">
+                <span asp-validation-for="Input.Email" class="validation-error"></span>
+            </div>
+
+            <button type="submit" class="auth-button">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+                Complete Registration
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --input-bg: #f8fafc;
+    }
+
+    .auth-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: #f1f5f9;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .provider-logo {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1.5rem;
+    }
+
+        .provider-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    .auth-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    .auth-notice {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: #f8fafc;
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        color: var(--primary-color);
+    }
+
+    .auth-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    label {
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .auth-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+        .auth-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+    .auth-button {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+        .auth-button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .btn-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .validation-summary {
+        color: #dc2626;
+        padding: 1rem;
+        background: #fef2f2;
+        border-radius: 0.75rem;
+    }
+
+    .validation-error {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    @@media (max-width: 480px) {
+        .auth-card {
+            padding: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>

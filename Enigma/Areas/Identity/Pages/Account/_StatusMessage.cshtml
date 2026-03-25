@@ -1,0 +1,156 @@
+﻿@model string
+
+@if (!String.IsNullOrEmpty(Model))
+{
+    var statusMessageClass = Model.StartsWith("Error") ? "error" : "success";
+    <div class="status-message @statusMessageClass" role="alert">
+        <div class="message-content">
+            <div class="icon-container">
+                @if (statusMessageClass == "success")
+                {
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                }
+                else
+                {
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                }
+            </div>
+            <div class="text-container">
+                <p class="message-title">@(statusMessageClass == "success" ? "Success!" : "Attention!")</p>
+                <p class="message-text">@Model</p>
+            </div>
+        </div>
+        <button class="close-btn" aria-label="Close message">
+            <svg viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+    </div>
+}
+
+<style>
+    :root {
+        --success-bg: #f0fdf4;
+        --success-border: #4ade80;
+        --success-text: #166534;
+        --error-bg: #fef2f2;
+        --error-border: #f87171;
+        --error-text: #991b1b;
+        --surface-dark: #1a1a1a;
+    }
+
+    .status-message {
+        position: relative;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 1rem 0;
+        border: 1px solid transparent;
+        animation: slideIn 0.3s ease-out;
+    }
+
+        .status-message.success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+        }
+
+        .status-message.error {
+            background: var(--error-bg);
+            border-color: var(--error-border);
+        }
+
+    .message-content {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        flex-grow: 1;
+    }
+
+    .icon-container {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon {
+        width: 100%;
+        height: 100%;
+    }
+
+    .success .icon {
+        color: var(--success-text);
+    }
+
+    .error .icon {
+        color: var(--error-text);
+    }
+
+    .text-container {
+        flex-grow: 1;
+    }
+
+    .message-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .success .message-title {
+        color: var(--success-text);
+    }
+
+    .error .message-title {
+        color: var(--error-text);
+    }
+
+    .message-text {
+        color: var(--surface-dark);
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        padding: 0.25rem;
+        cursor: pointer;
+        color: var(--surface-dark);
+        transition: opacity 0.2s ease;
+    }
+
+        .close-btn:hover {
+            opacity: 0.8;
+        }
+
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.close-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.currentTarget.closest('.status-message').style.display = 'none';
+        });
+    });
+</script>

@@ -1,0 +1,138 @@
+﻿@* @model LectureFiltering
+<style>
+    .lecture-filtering {
+        padding: 20px;
+        background-color: #2D2D2D;
+        color: white;
+    }
+
+        .lecture-filtering h2 {
+            color: #00aaff;
+        }
+
+        .lecture-filtering label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .lecture-filtering input, .lecture-filtering select {
+            margin-top: 5px;
+            padding: 5px;
+            background-color: #191919;
+            color: white;
+            border: 1px solid #00aaff;
+        }
+
+        .lecture-filtering button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #00aaff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .lecture-filtering table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .lecture-filtering table, th, td {
+            border: 1px solid #00aaff;
+        }
+
+        .lecture-filtering th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .lecture-filtering th {
+            background-color: #00aaff;
+            color: white;
+        }
+
+</style>
+<div class="lecture-filtering">
+    <h2>Filter Lectures</h2>
+    <form asp-action="LecturesPOST" method="post">
+        <div>
+            <label for="Search">Search:</label>
+            <input type="text" id="Search" name="Search" value="@Model.Search" placeholder="Search by name or description" />
+        </div>
+        
+        <div>
+            <label for="Status">Status:</label>
+            <select id="Status" name="Status">
+                <option value="">All</option>
+                @foreach (var status in Enum.GetValues(typeof(LectureStatus)))
+                {
+                    <option value="@status" @(status.Equals(Model.Status) ? "selected" : "")>@status</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="Type">Type:</label>
+            <select id="Type" name="Type">
+                <option value="">All</option>
+                @foreach (var type in Enum.GetValues(typeof(LectureType)))
+                {
+                    <option value="@type" @(type.Equals(Model.Type) ? "selected" : "")>@type</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="Start">Start Date:</label>
+            <input type="date" id="Start" name="Start" value="@Model.Start?.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div>
+            <label for="End">End Date:</label>
+            <input type="date" id="End" name="End" value="@Model.End?.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div>
+            <label for="MinLimit">Minimum Students:</label>
+            <input type="number" id="MinLimit" name="MinLimit" value="@Model.MinLimit" />
+        </div>
+
+        <div>
+            <label for="MaxLimit">Maximum Students:</label>
+            <input type="number" id="MaxLimit" name="MaxLimit" value="@Model.MaxLimit" />
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <h2>Lecture Results</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Student Limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lecture in Model.Lectures)
+            {
+                <tr>
+                    <td>@lecture.Name</td>
+                    <td>@lecture.Description</td>
+                    <td>@lecture.LectureStatus</td>
+                    <td>@lecture.Type</td>
+                    <td>@lecture.LectureStartTime</td>
+                    <td>@lecture.LectureEndTime</td>
+                    <td>@lecture.StudentLimit</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+ *@

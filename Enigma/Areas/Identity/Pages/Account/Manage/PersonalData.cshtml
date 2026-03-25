@@ -1,0 +1,223 @@
+﻿@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Data Management";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<div class="data-management-container">
+    <div class="security-card">
+        <header class="security-header">
+            <h1 class="security-title">Your Personal Data</h1>
+            <p class="security-subtitle">Control your account information</p>
+        </header>
+
+        <div class="data-content">
+            <div class="data-warning">
+                <svg class="warning-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <div class="warning-text">
+                    <p>Your account contains personal data you've provided. You can:</p>
+                    <ul class="data-actions-list">
+                        <li>Download a copy of your personal data</li>
+                        <li>Permanently delete your account and all associated data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="critical-notice">
+                <h3 class="notice-title">
+                    <svg class="danger-icon" viewBox="0 0 24 24">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Important Notice
+                </h3>
+                <p>Account deletion is permanent and cannot be recovered. All data including:</p>
+                <ul class="deletion-list">
+                    <li>Personal information</li>
+                    <li>Account credentials</li>
+                    <li>Activity history</li>
+                </ul>
+                <p>will be permanently erased from our systems.</p>
+            </div>
+
+            <div class="data-actions">
+                <form id="download-data" asp-page="DownloadPersonalData" method="post">
+                    <button type="submit" class="data-action download-action">
+                        <svg class="action-icon" viewBox="0 0 24 24">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                        </svg>
+                        Download Data Archive
+                    </button>
+                </form>
+
+                <a id="delete" asp-page="DeletePersonalData" class="data-action delete-action">
+                    <svg class="action-icon" viewBox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                    </svg>
+                    Delete Account Permanently
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelector('.delete-action').addEventListener('click', function(e) {
+            if (!confirm('Are you absolutely sure you want to permanently delete your account? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --destructive: #dc2626;
+        --warning-bg: #fffbeb;
+        --warning-text: #92400e;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a3a3a3;
+        --surface-dark: #2d2d2d;
+    }
+
+    .data-management-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .security-card {
+        background: var(--surface-dark);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .security-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .security-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .security-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    .data-warning {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--warning-bg);
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .warning-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        color: var(--warning-text);
+    }
+
+    .warning-text {
+        color: var(--warning-text);
+    }
+
+    .data-actions-list {
+        margin: 0.5rem 0;
+        padding-left: 1.25rem;
+    }
+
+    .critical-notice {
+        border: 2px solid var(--destructive);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .notice-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--destructive);
+        margin-bottom: 1rem;
+    }
+
+    .danger-icon {
+        width: 24px;
+        height: 24px;
+        color: var(--destructive);
+    }
+
+    .deletion-list {
+        margin: 0.5rem 0;
+        padding-left: 1.25rem;
+        color: var(--text-primary);
+    }
+
+    .data-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .data-action {
+        padding: 1rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .download-action {
+        background: var(--primary-color);
+        color: white;
+    }
+
+        .download-action:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .delete-action {
+        background: none;
+        border: 2px solid var(--destructive);
+        color: var(--destructive);
+    }
+
+        .delete-action:hover {
+            background: rgba(220, 38, 38, 0.1);
+            transform: translateY(-1px);
+        }
+
+    .action-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    @@media (max-width: 640px) {
+        .security-card {
+            padding: 1.5rem;
+        }
+
+        .security-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>

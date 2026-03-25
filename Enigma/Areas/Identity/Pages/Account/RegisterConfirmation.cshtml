@@ -1,0 +1,192 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Account Confirmation";
+}
+
+<div class="confirmation-container">
+    <div class="confirmation-card">
+        @if (Model.DisplayConfirmAccountLink)
+        {
+            <div class="dev-notice">
+                <svg class="warning-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <div class="notice-content">
+                    <h3>Development Environment Notice</h3>
+                    <p>Email services are not configured. For production setup:</p>
+                    <a href="https://aka.ms/aspaccountconf" class="docs-link">
+                        Configure Email Services
+                        <svg class="link-icon" viewBox="0 0 24 24">
+                            <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <a id="confirm-link" href="@Model.EmailConfirmationUrl" class="confirmation-button">
+                Confirm Account Now
+                <svg class="button-icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+            </a>
+        }
+        else
+        {
+            <div class="email-confirmation">
+                <svg class="email-icon" viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+                <h1>Confirm Your Email</h1>
+                <p>We've sent a confirmation link to your email address</p>
+                <div class="check-spam">
+                    <svg class="info-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                    </svg>
+                    <span>Can't find the email? Check your spam folder</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --warning-color: #f59e0b;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
+
+    .confirmation-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background: #f8fafc;
+    }
+
+    .confirmation-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+        text-align: center;
+    }
+
+    /* Development Mode Styles */
+    .dev-notice {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: #fffbeb;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .warning-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        color: var(--warning-color);
+    }
+
+    .notice-content h3 {
+        margin: 0 0 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .docs-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .link-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .confirmation-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 0.75rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+        .confirmation-button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+    .button-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Production Mode Styles */
+    .email-confirmation {
+        padding: 2rem;
+    }
+
+    .email-icon {
+        width: 80px;
+        height: 80px;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .email-confirmation h1 {
+        font-size: 1.75rem;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .email-confirmation p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .check-spam {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: #f1f5f9;
+        border-radius: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .info-icon {
+        width: 20px;
+        height: 20px;
+        color: var(--text-secondary);
+    }
+
+    @@media (max-width: 480px) {
+        .confirmation-card {
+            padding: 2rem;
+        }
+
+        .dev-notice {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .email-confirmation h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>

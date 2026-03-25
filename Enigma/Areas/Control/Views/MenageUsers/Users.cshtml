@@ -1,0 +1,242 @@
+﻿@using Models.Models
+@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "User Management";
+}
+
+
+<style>
+    :root {
+        --primary-color: #6366f1;
+        --secondary-color: #4f46e5;
+        --background-dark: #1a1a1a;
+        --surface-dark: #262626;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a3a3a3;
+    }
+
+    body {
+        background: var(--background-dark);
+        font-family: 'Inter', sans-serif;
+        color: var(--text-primary);
+    }
+    .nav-item,a{
+        color:black!important;
+    }
+    
+    .management-header {
+        text-align: center;
+        padding: 2rem 0;
+        border-bottom: 1px solid var(--surface-dark);
+    }
+
+    .search-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        position: relative;
+    }
+
+    .search-input {
+        background: var(--surface-dark);
+        border: 2px solid #404040;
+        color: var(--text-primary);
+        padding: 1rem 2.5rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+    }
+
+    .user-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem 0;
+    }
+
+    .user-card {
+        background: var(--surface-dark);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .user-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1.5rem;
+        border: 3px solid var(--primary-color);
+        padding: 2px;
+    }
+
+    .token-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .token-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-color);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .token-btn:disabled {
+        opacity: 0.5;
+        background: #4f4f4f;
+        cursor: not-allowed;
+    }
+
+    .token-btn:hover:not(:disabled) {
+        background: var(--secondary-color);
+        transform: scale(1.1);
+    }
+
+    .token-count {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+
+    .user-meta {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .user-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .user-email {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        word-break: break-word;
+    }
+
+    .user-phone {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="management-header">
+    <h1 class="display-5 fw-bold">@ViewData["Title"]</h1>
+    <p class="text-muted">Manage user accounts and permissions</p>
+</div>
+
+<form asp-action="UsersPOST" method="post" class="search-container">
+    <div class="position-relative">
+        <i class="fas fa-search search-icon"></i>
+        <input name="email" 
+               class="form-control search-input" 
+               placeholder="Search users by email..."
+               aria-label="Search users">
+    </div>
+</form>
+
+<div class="user-grid container">
+    @foreach (var user in Model)
+    {
+        <div class="user-card" onclick="window.location.href='/Control/MenageUsers/User/@user.Id'">
+            <div class="user-meta">
+                @if (string.IsNullOrEmpty(user.Image))
+                {
+                    <img src="/images/user.png" class="user-avatar" alt="@user.Name's avatar">
+                }
+                else
+                {
+                    <img src="@user.Image" class="user-avatar" alt="@user.Name's avatar">
+                }
+                <h2 class="user-name">@user.Name</h2>
+                <p class="user-email">@user.Email</p>
+                <p class="user-phone">@user.PhoneNumber</p>
+            </div>
+
+            <div class="token-controls">
+                <button onclick="Decrese('@user.Id', event)" 
+                        class="token-btn" 
+                        @(user.Tokens <= 0 ? "disabled" : "")>
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span class="token-count" id="TokenCount{@user.Id}">@user.Tokens</span>
+                <button onclick="Increse('@user.Id', event)" class="token-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function updateTokenDisplay(id, tokens) {
+            const element = document.getElementById(`TokenCount{${id}}`);
+            element.textContent = tokens;
+            element.animate([
+                { transform: 'scale(1)', color: 'inherit' },
+                { transform: 'scale(1.2)', color: '#6366f1' },
+                { transform: 'scale(1)', color: 'inherit' }
+            ], { duration: 300 });
+        }
+
+        async function modifyTokens(url, id, event) {
+            event.stopPropagation();
+            try {
+                const response = await fetch(url + id, { method: 'POST' });
+                const data = await response.json();
+                updateTokenDisplay(id, data.tokens);
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        function Increse(id, event) {
+            modifyTokens('/Control/MenageUsers/IncTokens?id=', id, event);
+        }
+
+        function Decrese(id, event) {
+            modifyTokens('/Control/MenageUsers/DecTokens?id=', id, event);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+    </script>
+}

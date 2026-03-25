@@ -1,0 +1,905 @@
+﻿ @page
+@model RegisterModel
+
+@{
+    Layout = null;  // This removes the header and footer from the layout
+    ViewData["Title"] = "Register";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: row height: 100vh;
+            justify-content: space-around;
+        }
+
+        .login-form {
+            width: 100%;
+            min-width: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+
+
+        .login-image {
+            width: 60%;
+            background-color: #343a40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .slider {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .slider ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .slider li {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                transition: opacity 1s ease-in-out;
+                width: 100%;
+                height: 100%;
+            }
+
+                .slider li.active {
+                    opacity: 1;
+                }
+
+            .slider img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+
+
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Poppins-Regular, sans-serif;
+        }
+
+        /*---------------------------------------------*/
+        a {
+            font-family: Poppins-Regular;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #666666;
+            margin: 0px;
+            transition: all 0.4s;
+            -webkit-transition: all 0.4s;
+            -o-transition: all 0.4s;
+            -moz-transition: all 0.4s;
+        }
+
+            a:focus {
+                outline: none !important;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: #6a7dfe;
+                color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
+                color: -o-linear-gradient(left, #21d4fd, #b721ff);
+                color: -moz-linear-gradient(left, #21d4fd, #b721ff);
+                color: linear-gradient(left, #21d4fd, #b721ff);
+            }
+
+        /*---------------------------------------------*/
+        h1, h2, h3, h4, h5, h6 {
+            margin: 0px;
+        }
+
+        p {
+            font-family: Poppins-Regular;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #666666;
+            margin: 0px;
+        }
+
+        ul, li {
+            margin: 0px;
+            list-style-type: none;
+        }
+
+
+        /*---------------------------------------------*/
+        input {
+            outline: none;
+            border: none;
+        }
+
+        textarea {
+            outline: none;
+            border: none;
+        }
+
+            textarea:focus, input:focus {
+                border-color: transparent !important;
+            }
+
+                input:focus::-webkit-input-placeholder {
+                    color: transparent;
+                }
+
+                input:focus:-moz-placeholder {
+                    color: transparent;
+                }
+
+                input:focus::-moz-placeholder {
+                    color: transparent;
+                }
+
+                input:focus:-ms-input-placeholder {
+                    color: transparent;
+                }
+
+                textarea:focus::-webkit-input-placeholder {
+                    color: transparent;
+                }
+
+                textarea:focus:-moz-placeholder {
+                    color: transparent;
+                }
+
+                textarea:focus::-moz-placeholder {
+                    color: transparent;
+                }
+
+                textarea:focus:-ms-input-placeholder {
+                    color: transparent;
+                }
+
+        input::-webkit-input-placeholder {
+            color: #adadad;
+        }
+
+        input:-moz-placeholder {
+            color: #adadad;
+        }
+
+        input::-moz-placeholder {
+            color: #adadad;
+        }
+
+        input:-ms-input-placeholder {
+            color: #adadad;
+        }
+
+        textarea::-webkit-input-placeholder {
+            color: #adadad;
+        }
+
+        textarea:-moz-placeholder {
+            color: #adadad;
+        }
+
+        textarea::-moz-placeholder {
+            color: #adadad;
+        }
+
+        textarea:-ms-input-placeholder {
+            color: #adadad;
+        }
+
+        /*---------------------------------------------*/
+        button {
+            outline: none !important;
+            border: none;
+            background: transparent;
+        }
+
+            button:hover {
+                cursor: pointer;
+            }
+
+        iframe {
+            border: none !important;
+        }
+
+
+        /*//////////////////////////////////////////////////////////////////
+                [ Utility ]*/
+        .txt1 {
+            font-family: Poppins-Regular;
+            font-size: 13px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .txt2 {
+            font-family: Poppins-Regular;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.5;
+        }
+
+        /*//////////////////////////////////////////////////////////////////
+                [ login ]*/
+
+        .limiter {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .container-login100 {
+            width: 100%;
+            min-height: 100vh;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: #f2f2f2;
+        }
+
+        .wrap-login100 {
+            width: 390px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 77px 55px 33px 55px;
+            box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+            -webkit-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+            -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+            -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /*------------------------------------------------------------------
+                [ Form ]*/
+
+        .login100-form {
+            width: 100%;
+        }
+
+        .login100-form-title {
+            display: block;
+            font-family: Poppins-Bold;
+            font-size: 30px;
+            color: #333333;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+            .login100-form-title i {
+                font-size: 60px;
+            }
+
+        /*------------------------------------------------------------------
+                [ Input ]*/
+
+        .wrap-input100 {
+            width: 100%;
+            position: relative;
+            border-bottom: 2px solid #adadad;
+            margin-bottom: 37px;
+        }
+
+        .input100 {
+            font-family: Poppins-Regular;
+            font-size: 15px;
+            color: #555555;
+            line-height: 1.2;
+            display: block;
+            width: 100%;
+            height: 45px;
+            background: transparent;
+            padding: 0 5px;
+        }
+
+        /*---------------------------------------------*/
+        .focus-input100 {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+            .focus-input100::before {
+                content: "";
+                display: block;
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                -webkit-transition: all 0.4s;
+                -o-transition: all 0.4s;
+                -moz-transition: all 0.4s;
+                transition: all 0.4s;
+                background: #6a7dfe;
+                background: -webkit-linear-gradient(left, #21d4fd, #b721ff);
+                background: -o-linear-gradient(left, #21d4fd, #b721ff);
+                background: -moz-linear-gradient(left, #21d4fd, #b721ff);
+                background: linear-gradient(left, #21d4fd, #b721ff);
+            }
+
+            .focus-input100::after {
+                font-family: Poppins-Regular;
+                font-size: 15px;
+                color: #999999;
+                line-height: 1.2;
+                content: attr(data-placeholder);
+                display: block;
+                width: 100%;
+                position: absolute;
+                top: 16px;
+                left: 0px;
+                padding-left: 5px;
+                -webkit-transition: all 0.4s;
+                -o-transition: all 0.4s;
+                -moz-transition: all 0.4s;
+                transition: all 0.4s;
+            }
+
+        .input100:focus + .focus-input100::after {
+            top: -15px;
+        }
+
+        .input100:focus + .focus-input100::before {
+            width: 100%;
+        }
+
+        .has-val.input100 + .focus-input100::after {
+            top: -15px;
+        }
+
+        .has-val.input100 + .focus-input100::before {
+            width: 100%;
+        }
+
+        /*---------------------------------------------*/
+        .btn-show-pass {
+            font-size: 15px;
+            color: #999999;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            height: 100%;
+            top: 0;
+            right: 0;
+            padding-right: 5px;
+            cursor: pointer;
+            -webkit-transition: all 0.4s;
+            -o-transition: all 0.4s;
+            -moz-transition: all 0.4s;
+            transition: all 0.4s;
+        }
+
+            .btn-show-pass:hover {
+                color: #6a7dfe;
+                color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
+                color: -o-linear-gradient(left, #21d4fd, #b721ff);
+                color: -moz-linear-gradient(left, #21d4fd, #b721ff);
+                color: linear-gradient(left, #21d4fd, #b721ff);
+            }
+
+            .btn-show-pass.active {
+                color: #6a7dfe;
+                color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
+                color: -o-linear-gradient(left, #21d4fd, #b721ff);
+                color: -moz-linear-gradient(left, #21d4fd, #b721ff);
+                color: linear-gradient(left, #21d4fd, #b721ff);
+            }
+
+
+
+        /*------------------------------------------------------------------
+                [ Button ]*/
+        .container-login100-form-btn {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-top: 13px;
+        }
+
+        .wrap-login100-form-btn {
+            width: 100%;
+            display: block;
+            position: relative;
+            z-index: 1;
+            border-radius: 25px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .login100-form-bgbtn {
+            position: absolute;
+            z-index: -1;
+            width: 300%;
+            height: 100%;
+            background: #a64bf4;
+            background: -webkit-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+            background: -o-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+            background: -moz-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+            background: linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+            top: 0;
+            left: -100%;
+            -webkit-transition: all 0.4s;
+            -o-transition: all 0.4s;
+            -moz-transition: all 0.4s;
+            transition: all 0.4s;
+        }
+
+        .login100-form-btn {
+            font-family: Poppins-Medium;
+            font-size: 15px;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%;
+            height: 50px;
+        }
+
+        .wrap-login100-form-btn:hover .login100-form-bgbtn {
+            left: 0;
+        }
+
+
+        /*------------------------------------------------------------------
+                [ Responsive ]*/
+
+        @@media (max-width: 576px) {
+            .wrap-login100 {
+                padding: 77px 15px 33px 15px;
+            }
+        }
+
+
+
+        /*------------------------------------------------------------------
+                [ Alert validate ]*/
+
+        .validate-input {
+            position: relative;
+        }
+
+        .alert-validate::before {
+            content: attr(data-validate);
+            position: absolute;
+            max-width: 70%;
+            background-color: #fff;
+            border: 1px solid #c80000;
+            border-radius: 2px;
+            padding: 4px 25px 4px 10px;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+            right: 0px;
+            pointer-events: none;
+            font-family: Poppins-Regular;
+            color: #c80000;
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: left;
+            visibility: hidden;
+            opacity: 0;
+            -webkit-transition: opacity 0.4s;
+            -o-transition: opacity 0.4s;
+            -moz-transition: opacity 0.4s;
+            transition: opacity 0.4s;
+        }
+
+        .alert-validate::after {
+            content: "\f06a";
+            font-family: FontAwesome;
+            font-size: 16px;
+            color: #c80000;
+            display: block;
+            position: absolute;
+            background-color: #fff;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+            right: 5px;
+        }
+
+        .alert-validate:hover:before {
+            visibility: visible;
+            opacity: 1;
+        }
+/* 
+        @@media (max-width: 992px) {
+            .alert-validate::before {
+                visibility: visible;
+                opacity: 1;
+            }
+        } */
+
+
+        .regNow {
+            padding-top: 10px;
+            margin-left: 39%;
+        }
+
+        .login-form {
+            width: 100%;
+        }
+
+        .loginTemp {
+            display: flex;
+            flex-direction: column;
+            width: 45%;
+        }
+
+        .devider {
+            display: flex;
+            margin-top: 10px;
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .line {
+            width: 40%;
+            margin-top: auto;
+            margin-bottom: auto;
+            border-radius: 20%;
+            height: 1px;
+            background-color: black;
+        }
+
+        .forgotPassword {
+            margin-left: auto;
+            text-align: center;
+        }
+
+        .checkbox-remeber {
+            margin-top: -30px;
+            font-size: 10pt;
+            padding-left: 5px;
+            color: grey;
+            margin-left: auto;
+            margin-bottom: 100px;
+        }
+
+        .error p {
+            color: red !important;
+            padding-left: 2px;
+            margin-bottom: 10px;
+        }
+
+
+
+        /* For smaller screens */
+        @@media (max-width: 1100px) {
+            .login-container {
+                flex-direction: column; /* Stack the image and form vertically */
+            }
+
+            .login-form {
+                width: 100%; /* Take full width */
+                min-width: 380px;
+                position: absolute; /* Position the form on top of the image */
+                top: 50%; /* Center vertically */
+                left: 50%; /* Center horizontally */
+                transform: translate(-50%, -50%); /* Adjust position */
+                z-index: 1; /* Ensure it appears above the image */
+                background-color: rgba(255, 255, 255, 0.9); /* Slight background for readability */
+                padding: 20px; /* Add padding for spacing */
+                border-radius: 10px; /* Optional: Rounded corners */
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .regNow {
+                position: absolute; /* Position the form on top of the image */
+                top: 15%; /* Center vertically */
+                left: 50%; /* Center horizontally */
+                transform: translate(-50%, -50%); /* Adjust position */
+                z-index: 1; /* Ensure it appears above the image */
+                background-color: transparent; /* Slight background for readability */
+
+
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .login100-form-title span {
+                color: white;
+            }
+
+            .limiter {
+                min-height: 0;
+                padding: 0;
+            }
+
+            .login-image {
+                filter: brightness(30%);
+                width: 150%;
+                height: 150vh; /* Ensure the image takes full screen height */
+                position: relative;
+            }
+
+            .slider {
+                position: absolute; /* Ensure the slider takes up the entire image area */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .container-login100 {
+                margin: 0 !important;
+                padding: 0 !important;
+                min-height: 0;
+            }
+
+            .login-form {
+                width: 40%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                background-color: #f2f2f2;
+            }
+        }
+
+        color: red;
+        margin-top: 10px;
+        font-size: 13px;
+        }
+
+        /* Add your existing styles here */
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .form-group .field-validation-error {
+                color: red;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                font-size: 13px;
+                margin-top: 2px;
+            }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="loginTemp">
+            <div class="regNow">
+                <span class="txt1">
+                    Already have an account?
+                </span>
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="txt2">
+                    Log In
+                </a>
+            </div>
+            <div class="login-form">
+                <div class="limiter">
+                    <div class="container-login100">
+                        <div class="wrap-login100">
+                            <form class="login100-form validate-form" asp-route-returnUrl="@Model.ReturnUrl" enctype="multipart/form-data" id="registerForm" method="post">
+                                <span class="login100-form-title p-b-26">
+                                    Register
+                                </span>               
+                                <div class="error">
+                                    @if (ViewData["Error"] != null)
+                                    {
+                                        <p>@ViewData["Error"].ToString()</p>
+                                    }
+                                </div>
+
+                                <div class="wrap-input100 validate-input" data-validate="First and last name is required">
+                                    <input id="Username" class="input100" asp-for="Input.Username" autocomplete="username" aria-required="true" type="text" >
+                                    <span class="focus-input100" data-placeholder="First and last name"></span>
+                                    <div id="UsernameAlert" class="alert-validate" data-validate="First and last name is required"></div>
+                                </div>
+
+                                <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+                                    <input id="Email" class="input100" asp-for="Input.Email" autocomplete="email" aria-required="true" type="email">
+                                    <span class="focus-input100" data-placeholder="Email"></span>
+                                    <div id="EmailAlert" class="alert-validate" data-validate="Valid email is required"></div>
+                                </div>
+
+                                <div class="wrap-input100 validate-input" data-validate="Phone number is required">
+                                    <input id="Phonenumber" class="input100" asp-for="Input.Phonenumber" autocomplete="Phonenumber" aria-required="true" type="text" >
+                                    <span class="focus-input100" data-placeholder="Phone number"></span>
+                                    <div id="PhonenumberAlert" class="alert-validate" data-validate="Phone number is required"></div>
+                                </div>
+
+                                <div class="wrap-input100 validate-input" data-validate="Password is required">
+                                    <input id="Password" asp-for="Input.Password" autocomplete="new-password" aria-required="true" class="input100" type="password" >
+                                    <span class="focus-input100" data-placeholder="Password"></span>
+                                    <div id="PasswordAlert" class="alert-validate" data-validate="Password is required"></div>
+                                </div>
+
+                                <div class="wrap-input100 validate-input" data-validate="Please confirm your password">
+                                    <input id="CPassword" asp-for="Input.ConfirmPassword" autocomplete="new-password" aria-required="true" class="input100" type="password" >
+                                    <span class="focus-input100" data-placeholder="Confirm Password"></span>
+                                    <div id="CPasswordAlert" class="alert-validate" data-validate="Please confirm your password"></div>
+                                </div>
+
+                                <div class="checkbox-remeber validate-input">
+                                   
+                                    <label asp-for="Input.Terms" class="form-label">
+                                        <input id="Terms" type="checkbox" class="form-check-input" asp-for="Input.Terms" />
+                                        By creating an account you agree to the <a href="#">terms of service and privacy policy</a>
+                                    </label>
+                                    <div id="TermsAlert" class="alert-validate" data-validate="You must agree to the terms"></div>
+
+                                </div>
+
+                                <div class="container-login100-form-btn">
+                                    <div class="wrap-login100-form-btn">
+                                        <div class="login100-form-bgbtn"></div>
+                                        <button class="login100-form-btn" id="login-submit" type="submit">
+                                            Register
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="dropDownSelect1"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('UsernameAlert').style.visibility = 'hidden';
+        document.getElementById('EmailAlert').style.visibility = 'hidden';
+        document.getElementById('PhonenumberAlert').style.visibility = 'hidden';
+        document.getElementById('PasswordAlert').style.visibility = 'hidden';
+        document.getElementById('CPasswordAlert').style.visibility = 'hidden';
+        document.getElementById('TermsAlert').style.visibility = 'hidden';
+
+        var inputs = document.querySelectorAll('.input100');
+
+        inputs.forEach(function (input) {
+            if (input.value) {
+                input.classList.add('has-val');
+            }
+
+            input.addEventListener('focusout', function () {
+                if (input.value) {
+                    input.classList.add('has-val');
+                } else {
+                    input.classList.remove('has-val');
+                }
+            });
+        });
+
+        // Validation
+        var form = document.getElementById('registerForm');
+        form.addEventListener('submit', function (event) {
+            var isValid = true;
+            var username = document.getElementById('Username');
+            if (username.value == '') {
+                isValid = false;
+                document.getElementById('UsernameAlert').style.visibility = 'visible';
+            } else {
+                document.getElementById('UsernameAlert').style.visibility = 'hidden';
+
+            }
+
+            var email = document.getElementById('Email');
+            if (email.value == '') {
+                isValid = false;
+                document.getElementById('EmailAlert').style.visibility = 'visible';
+            }{
+                document.getElementById('EmailAlert').style.visibility = 'hidden';
+
+            }
+
+            var phone = document.getElementById('Phonenumber');
+            if (phone.value == '') {
+                isValid = false;
+                document.getElementById('PhonenumberAlert').style.visibility = 'visible';
+            }{
+                document.getElementById('PhonenumberAlert').style.visibility = 'hidden';
+
+            }
+
+            var password = document.getElementById('Password');
+            if (password.value == '') {
+                isValid = false;
+                document.getElementById('PasswordAlert').style.visibility = 'visible';
+            }{
+
+            }
+
+            var cpassword = document.getElementById('CPassword');
+            if (cpassword.value == '' | cpassword.value != password.value) {
+                isValid = false;
+                document.getElementById('CPasswordAlert').style.visibility = 'visible';
+            } else{
+                document.getElementById('CPasswordAlert').style.visibility = 'hidden';
+
+            }
+            var terms = document.getElementById('Terms');
+            console.log(terms.checked);
+            if (terms.checked) {
+                document.getElementById('TermsAlert').style.visibility = 'hidden';
+            }else{
+                isValid = false;
+                document.getElementById('TermsAlert').style.visibility = 'visible';
+            }
+           
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+    
+</script>
